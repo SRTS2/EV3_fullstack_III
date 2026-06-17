@@ -2,6 +2,7 @@ package com.rednorte.bff.controller;
 
 import com.rednorte.bff.client.ReasignacionClient;
 import com.rednorte.bff.dto.ReasignacionDTO;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,13 +41,13 @@ public class ReasignacionController {
     }
 
     @PostMapping
-    public ResponseEntity<ReasignacionDTO> ejecutarReasignacion(@RequestBody Map<String, Object> body) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(reasignacionClient.ejecutarReasignacion(body));
+    public ResponseEntity<ReasignacionDTO> ejecutarReasignacion(@Valid @RequestBody ReasignacionDTO dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(reasignacionClient.ejecutarReasignacion(dto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ReasignacionDTO> actualizar(@PathVariable Long id, @RequestBody Map<String, Object> body) {
-        return ResponseEntity.ok(reasignacionClient.actualizar(id, body));
+    public ResponseEntity<ReasignacionDTO> actualizar(@PathVariable Long id, @Valid @RequestBody ReasignacionDTO dto) {
+        return ResponseEntity.ok(reasignacionClient.actualizar(id, dto));
     }
 
     @PutMapping("/{id}/confirmar")

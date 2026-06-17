@@ -2,6 +2,7 @@ package com.rednorte.bff.controller;
 
 import com.rednorte.bff.client.PacientesClient;
 import com.rednorte.bff.dto.PacienteDTO;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,17 +35,17 @@ public class PacienteController {
     }
 
     @PostMapping
-    public ResponseEntity<PacienteDTO> crear(@RequestBody PacienteDTO paciente) {
+    public ResponseEntity<PacienteDTO> crear(@Valid @RequestBody PacienteDTO paciente) {
         return ResponseEntity.status(HttpStatus.CREATED).body(pacientesClient.crearPaciente(paciente));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PacienteDTO> actualizar(@PathVariable Long id, @RequestBody PacienteDTO paciente) {
+    public ResponseEntity<PacienteDTO> actualizar(@PathVariable Long id, @Valid @RequestBody PacienteDTO paciente) {
         return ResponseEntity.ok(pacientesClient.actualizarPaciente(id, paciente));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<PacienteDTO> actualizarParcial(@PathVariable Long id, @RequestBody PacienteDTO paciente) {
+    public ResponseEntity<PacienteDTO> actualizarParcial(@PathVariable Long id, @Valid @RequestBody PacienteDTO paciente) {
         return ResponseEntity.ok(pacientesClient.actualizarParcial(id, paciente));
     }
 

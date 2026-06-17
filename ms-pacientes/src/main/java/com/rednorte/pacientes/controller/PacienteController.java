@@ -51,7 +51,7 @@ public class PacienteController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<PacienteDTO> actualizarParcial(@PathVariable Long id,
-                                                          @RequestBody PacienteDTO datos) {
+                                                           @Valid @RequestBody PacienteDTO datos) {
         PacienteDTO resultado = pacienteService.actualizar(id, datos);
         return ResponseEntity.ok(resultado);
     }

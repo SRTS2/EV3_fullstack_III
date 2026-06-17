@@ -15,6 +15,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -145,5 +146,59 @@ class AuthServiceTest {
 
         assertEquals(100L, usuario.getPacienteId());
         verify(usuarioRepository).save(usuario);
+    }
+
+    @Test
+    void testListarTodos() {
+        when(usuarioRepository.findAll()).thenReturn(List.of(crearUsuario()));
+
+        var result = authService.listarTodos();
+
+        assertEquals(1, result.size());
+        assertEquals("12345678-9", result.get(0).getRut());
+    }
+
+    @Test
+    void testActualizar_Exitoso() {
+        Usuario usuario = crearUsuario();
+        UsuarioDTO dto = new UsuarioDTO();
+        dto.setNombre("Nombre Actualizado");
+        dto.setEmail("nuevo@mail.com");
+
+        when(usuarioRepository.findById(1L)).thenReturn(Optional.of(usuario));
+        when(usuarioRepository.save(any(Usuario.class))).thenReturn(usuario);
+
+        UsuarioDTO result = authService.actualizar(1L, dto);
+
+        assertEquals("Nombre Actualizado", result.getNombre());
+        assertEquals("nuevo@mail.com", result.getEmail());
+    }
+
+    @Test
+    void testActualizar_NoExiste() {
+        UsuarioDTO dto = new UsuarioDTO();
+        dto.setNombre("Test");
+
+        when(usuarioRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> authService.actualizar(99L, dto));
+    }
+
+    @Test
+    void testDesactivar_Exitoso() {
+        Usuario usuario = crearUsuario();
+        when(usuarioRepository.findById(1L)).thenReturn(Optional.of(usuario));
+
+        authService.desactivar(1L);
+
+        assertFalse(usuario.getActivo());
+        verify(usuarioRepository).save(usuario);
+    }
+
+    @Test
+    void testDesactivar_NoExiste() {
+        when(usuarioRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> authService.desactivar(99L));
     }
 }

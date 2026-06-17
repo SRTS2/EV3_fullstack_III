@@ -2,6 +2,7 @@ package com.rednorte.bff.controller;
 
 import com.rednorte.bff.client.ListaEsperaClient;
 import com.rednorte.bff.dto.ListaEsperaDTO;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,13 +40,13 @@ public class EsperaController {
     }
 
     @PostMapping
-    public ResponseEntity<ListaEsperaDTO> registrar(@RequestBody ListaEsperaDTO dto) {
+    public ResponseEntity<ListaEsperaDTO> registrar(@Valid @RequestBody ListaEsperaDTO dto) {
         ListaEsperaDTO result = listaEsperaClient.registrarEnEspera(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ListaEsperaDTO> actualizar(@PathVariable Long id, @RequestBody ListaEsperaDTO dto) {
+    public ResponseEntity<ListaEsperaDTO> actualizar(@PathVariable Long id, @Valid @RequestBody ListaEsperaDTO dto) {
         return ResponseEntity.ok(listaEsperaClient.actualizar(id, dto));
     }
 

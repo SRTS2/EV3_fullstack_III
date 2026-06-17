@@ -23,10 +23,10 @@ public interface ReasignacionClient {
     List<ReasignacionDTO> listarDisponibles();
 
     @PostMapping("/api/v1/reasignaciones")
-    ReasignacionDTO ejecutarReasignacion(@RequestBody Map<String, Object> body);
+    ReasignacionDTO ejecutarReasignacion(@RequestBody ReasignacionDTO body);
 
     @PutMapping("/api/v1/reasignaciones/{id}")
-    ReasignacionDTO actualizar(@PathVariable("id") Long id, @RequestBody Map<String, Object> body);
+    ReasignacionDTO actualizar(@PathVariable("id") Long id, @RequestBody ReasignacionDTO body);
 
     @PutMapping("/api/v1/reasignaciones/{id}/confirmar")
     ReasignacionDTO confirmarReasignacion(@PathVariable("id") Long id);

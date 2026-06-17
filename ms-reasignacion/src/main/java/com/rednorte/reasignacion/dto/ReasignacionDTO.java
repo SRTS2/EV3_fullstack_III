@@ -15,6 +15,7 @@ public class ReasignacionDTO {
     @NotNull(message = "El ID del paciente es obligatorio")
     private Long pacienteId;
 
+    @NotBlank(message = "El nombre del paciente es obligatorio")
     private String nombrePaciente;
 
     @NotBlank(message = "La especialidad es obligatoria")
