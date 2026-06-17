@@ -1,0 +1,32 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: ms-auth
+  datasource:
+    url: jdbc:h2:mem:authdb;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+jwt:
+  secret: ${JWT_SECRET:RedNorteClaveSecretaSuperSegura2024BFF}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+  datasource:
+    url: jdbc:postgresql://postgres:5432/${DB_NAME:auth_db}
+    username: ${DB_USER:rednorte}
+    password: ${DB_PASS:rednorte_pass_2024}
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(name = "ms-lista-espera", url = "${ms.lista-espera.url:http://localhost:8082}")
+@FeignClient(name = "ms-lista-espera", url = "${ms.lista-espera.url:http://localhost:8081}")
 public interface ListaEsperaClient {
 
     @GetMapping("/api/v1/espera")

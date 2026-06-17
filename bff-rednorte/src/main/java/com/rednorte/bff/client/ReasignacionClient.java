@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-@FeignClient(name = "ms-reasignacion", url = "${ms.reasignacion.url:http://localhost:8083}")
+@FeignClient(name = "ms-reasignacion", url = "${ms.reasignacion.url:http://localhost:8082}")
 public interface ReasignacionClient {
 
     @GetMapping("/api/v1/reasignaciones/historial/paciente/{pacienteId}")
