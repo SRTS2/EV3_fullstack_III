@@ -8,6 +8,7 @@ import com.rednorte.auth.model.entity.Usuario;
 import com.rednorte.auth.repository.UsuarioRepository;
 import com.rednorte.auth.security.JwtUtil;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.List;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,6 +78,34 @@ public class AuthService {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado con id: " + id));
         return toDTO(usuario);
+    }
+
+    @Transactional(readOnly = true)
+    public List<UsuarioDTO> listarTodos() {
+        return usuarioRepository.findAll().stream()
+                .map(this::toDTO)
+                .toList();
+    }
+
+    @Transactional
+    public UsuarioDTO actualizar(Long id, UsuarioDTO dto) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado con id: " + id));
+        if (dto.getNombre() != null) usuario.setNombre(dto.getNombre());
+        if (dto.getEmail() != null) usuario.setEmail(dto.getEmail());
+        if (dto.getRut() != null) usuario.setRut(dto.getRut());
+        if (dto.getRole() != null) usuario.setRole(dto.getRole());
+        if (dto.getActivo() != null) usuario.setActivo(dto.getActivo());
+        usuario = usuarioRepository.save(usuario);
+        return toDTO(usuario);
+    }
+
+    @Transactional
+    public void desactivar(Long id) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado con id: " + id));
+        usuario.setActivo(false);
+        usuarioRepository.save(usuario);
     }
 
     @Transactional
