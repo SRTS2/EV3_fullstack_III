@@ -12,7 +12,6 @@ services:
         methods:
           - POST
           - GET
-          - OPTIONS
     plugins:
       - name: cors
         config:
@@ -34,7 +33,7 @@ services:
     routes:
       - name: bff-route
         paths:
-          - /api/v1
+          - /api
         strip_path: false
         methods:
           - GET
