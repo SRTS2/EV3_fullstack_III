@@ -51,7 +51,7 @@ class ReasignacionServiceTest {
         ReasignacionDTO resultado = service.ejecutarReasignacion(dto);
         assertNotNull(resultado);
         assertEquals("Cardiología", resultado.getEspecialidad());
-        assertEquals(EstadoReasignacion.PENDIENTE.name(), resultado.getEstado());
+        assertEquals(EstadoReasignacion.PENDIENTE, resultado.getEstado());
         verify(repository, times(1)).save(any());
     }
 
@@ -82,7 +82,7 @@ class ReasignacionServiceTest {
         when(repository.save(any())).thenReturn(confirmada);
 
         ReasignacionDTO resultado = service.confirmarReasignacion(1L);
-        assertEquals(EstadoReasignacion.CONFIRMADA.name(), resultado.getEstado());
+        assertEquals(EstadoReasignacion.CONFIRMADA, resultado.getEstado());
     }
 
     @Test
@@ -98,7 +98,7 @@ class ReasignacionServiceTest {
         when(repository.save(any())).thenReturn(cancelada);
 
         ReasignacionDTO resultado = service.cancelarReasignacion(1L, "Paciente no disponible");
-        assertEquals(EstadoReasignacion.CANCELADA.name(), resultado.getEstado());
+        assertEquals(EstadoReasignacion.CANCELADA, resultado.getEstado());
     }
 
     @Test

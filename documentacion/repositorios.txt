@@ -3,25 +3,25 @@ https://github.com/SRTS2/EV3_fullstack_III
 Propósito: Contiene la documentacion general, diagramas, informes y archivos de configuracion (docker-compose, kong.yml, .gitignore, .env).
 
 Repositorio Frontend (Next.js):
-https://github.com/SRTS2/EV3_fullstack_III/tree/microservicios/frontend-rednorte
+https://github.com/SRTS2/EV3_fullstack_III/tree/fix/frontend-rednorte
 Propósito: Codigo y dependencias del componente frontend desarrollado con Next.js 14.
 
 Repositorio BFF (Backend for Frontend):
-https://github.com/SRTS2/EV3_fullstack_III/tree/microservicios/bff-rednorte
+https://github.com/SRTS2/EV3_fullstack_III/tree/fix/bff-rednorte
 Propósito: Microservicio BFF que agrega y orquesta peticiones a los microservicios internos.
 
 Repositorio ms-auth (Autenticacion):
-https://github.com/SRTS2/EV3_fullstack_III/tree/microservicios/ms-auth
+https://github.com/SRTS2/EV3_fullstack_III/tree/fix/ms-auth
 Propósito: Microservicio de autenticacion y registro de usuarios con JWT y BCrypt.
 
 Repositorio ms-pacientes (Gestion de Pacientes):
-https://github.com/SRTS2/EV3_fullstack_III/tree/microservicios/ms-pacientes
+https://github.com/SRTS2/EV3_fullstack_III/tree/fix/ms-pacientes
 Propósito: CRUD completo de pacientes con persistencia JPA y validacion de datos.
 
 Repositorio ms-lista-espera (Lista de Espera):
-https://github.com/SRTS2/EV3_fullstack_III/tree/microservicios/ms-lista-espera
+https://github.com/SRTS2/EV3_fullstack_III/tree/fix/ms-lista-espera
 Propósito: Gestion de pacientes en lista de espera con prioridades y tiempos estimados.
 
 Repositorio ms-reasignacion (Reasignacion de Citas):
-https://github.com/SRTS2/EV3_fullstack_III/tree/microservicios/ms-reasignacion
+https://github.com/SRTS2/EV3_fullstack_III/tree/fix/ms-reasignacion
 Propósito: Gestion de reasignacion de citas medicas con estados y cancelacion.

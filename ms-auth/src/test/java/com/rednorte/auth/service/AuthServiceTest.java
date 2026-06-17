@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +32,7 @@ class AuthServiceTest {
     @Mock
     private JwtUtil jwtUtil;
 
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     private AuthService authService;
 
     @BeforeEach
@@ -44,7 +46,7 @@ class AuthServiceTest {
         u.setRut("12345678-9");
         u.setNombre("Juan Perez");
         u.setEmail("juan@mail.com");
-        u.setContrasena("$2a$10$hash");
+        u.setContrasena(encoder.encode("pass123"));
         u.setRole("PACIENTE");
         u.setActivo(true);
         return u;
