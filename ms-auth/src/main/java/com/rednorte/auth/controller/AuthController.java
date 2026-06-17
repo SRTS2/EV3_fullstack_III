@@ -31,9 +31,4 @@ public class AuthController {
         UsuarioDTO created = authService.register(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
-
-    @GetMapping("/usuarios/{id}")
-    public ResponseEntity<UsuarioDTO> obtenerPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(authService.obtenerPorId(id));
-    }
 }

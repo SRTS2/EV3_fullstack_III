@@ -1,0 +1,392 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "RedNorte API",
+    "version": "1.0.0",
+    "description": "API del sistema de gestion de pacientes RedNorte"
+  },
+  "servers": [
+    { "url": "http://localhost:8000", "description": "API Gateway (Kong)" }
+  ],
+  "paths": {
+    "/api/auth/register": {
+      "post": {
+        "tags": ["Autenticacion"],
+        "summary": "Registrar nuevo usuario",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "rut": { "type": "string", "example": "12345678-9" },
+                  "nombre": { "type": "string", "example": "Juan Perez" },
+                  "email": { "type": "string", "example": "juan@mail.com" },
+                  "contrasena": { "type": "string", "example": "miPassword123" }
+                },
+                "required": ["rut", "nombre", "contrasena"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Usuario creado exitosamente" },
+          "400": { "description": "Datos invalidos o RUT duplicado" }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": ["Autenticacion"],
+        "summary": "Iniciar sesion",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "rut": { "type": "string", "example": "12345678-9" },
+                  "contrasena": { "type": "string", "example": "miPassword123" }
+                },
+                "required": ["rut", "contrasena"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login exitoso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": { "type": "string" },
+                    "role": { "type": "string" },
+                    "usuarioId": { "type": "integer" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "description": "Credenciales invalidas" }
+        }
+      }
+    },
+    "/api/v1/pacientes": {
+      "get": {
+        "tags": ["Pacientes"],
+        "summary": "Listar todos los pacientes",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Lista de pacientes" }
+        }
+      },
+      "post": {
+        "tags": ["Pacientes"],
+        "summary": "Crear paciente",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "rut": { "type": "string" },
+                  "nombre": { "type": "string" },
+                  "email": { "type": "string", "format": "email" },
+                  "telefono": { "type": "string" },
+                  "direccion": { "type": "string" }
+                },
+                "required": ["rut", "nombre", "email"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Paciente creado" }
+        }
+      }
+    },
+    "/api/v1/pacientes/{id}": {
+      "get": {
+        "tags": ["Pacientes"],
+        "summary": "Obtener paciente por ID",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Datos del paciente" },
+          "404": { "description": "Paciente no encontrado" }
+        }
+      },
+      "put": {
+        "tags": ["Pacientes"],
+        "summary": "Actualizar paciente",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Paciente actualizado" }
+        }
+      },
+      "patch": {
+        "tags": ["Pacientes"],
+        "summary": "Actualizar parcialmente un paciente",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Paciente actualizado parcialmente" }
+        }
+      },
+      "delete": {
+        "tags": ["Pacientes"],
+        "summary": "Desactivar paciente (borrado logico)",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "204": { "description": "Paciente desactivado" }
+        }
+      }
+    },
+    "/api/v1/pacientes/rut/{rut}": {
+      "get": {
+        "tags": ["Pacientes"],
+        "summary": "Obtener paciente por RUT",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "rut", "in": "path", "required": true, "schema": { "type": "string" }, "example": "12345678-9" }
+        ],
+        "responses": {
+          "200": { "description": "Datos del paciente" },
+          "404": { "description": "Paciente no encontrado" }
+        }
+      }
+    },
+    "/api/v1/espera": {
+      "get": {
+        "tags": ["Lista de Espera"],
+        "summary": "Listar todos los registros en espera",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Lista de espera" }
+        }
+      },
+      "post": {
+        "tags": ["Lista de Espera"],
+        "summary": "Registrar en lista de espera",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "201": { "description": "Registrado en espera" }
+        }
+      }
+    },
+    "/api/v1/espera/{id}": {
+      "get": {
+        "tags": ["Lista de Espera"],
+        "summary": "Obtener registro de espera por ID",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Registro de espera" },
+          "404": { "description": "No encontrado" }
+        }
+      },
+      "put": {
+        "tags": ["Lista de Espera"],
+        "summary": "Actualizar registro de espera",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Registro actualizado" }
+        }
+      },
+      "delete": {
+        "tags": ["Lista de Espera"],
+        "summary": "Eliminar registro de espera",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "204": { "description": "Registro eliminado" }
+        }
+      }
+    },
+    "/api/v1/espera/paciente/{pacienteId}": {
+      "get": {
+        "tags": ["Lista de Espera"],
+        "summary": "Obtener registros de espera por paciente",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "pacienteId", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Registros de espera del paciente" }
+        }
+      }
+    },
+    "/api/v1/espera/especialidad/{especialidad}": {
+      "get": {
+        "tags": ["Lista de Espera"],
+        "summary": "Obtener registros de espera por especialidad",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "especialidad", "in": "path", "required": true, "schema": { "type": "string" }, "example": "Cardiologia" }
+        ],
+        "responses": {
+          "200": { "description": "Registros de espera por especialidad" }
+        }
+      }
+    },
+    "/api/v1/espera/{id}/estado": {
+      "patch": {
+        "tags": ["Lista de Espera"],
+        "summary": "Actualizar estado de un registro de espera",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } },
+          { "name": "estado", "in": "query", "required": true, "schema": { "type": "string" }, "example": "ATENDIDO" }
+        ],
+        "responses": {
+          "200": { "description": "Estado actualizado" }
+        }
+      }
+    },
+    "/api/v1/reasignaciones": {
+      "get": {
+        "tags": ["Reasignacion"],
+        "summary": "Listar todas las reasignaciones",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Lista de reasignaciones" }
+        }
+      },
+      "post": {
+        "tags": ["Reasignacion"],
+        "summary": "Ejecutar reasignacion",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "201": { "description": "Reasignacion creada" }
+        }
+      }
+    },
+    "/api/v1/reasignaciones/{id}": {
+      "get": {
+        "tags": ["Reasignacion"],
+        "summary": "Obtener reasignacion por ID",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Datos de la reasignacion" },
+          "404": { "description": "No encontrada" }
+        }
+      },
+      "put": {
+        "tags": ["Reasignacion"],
+        "summary": "Actualizar reasignacion",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Reasignacion actualizada" }
+        }
+      },
+      "delete": {
+        "tags": ["Reasignacion"],
+        "summary": "Eliminar reasignacion",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "204": { "description": "Reasignacion eliminada" }
+        }
+      }
+    },
+    "/api/v1/reasignaciones/disponibles": {
+      "get": {
+        "tags": ["Reasignacion"],
+        "summary": "Listar reasignaciones disponibles",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Lista de reasignaciones disponibles" }
+        }
+      }
+    },
+    "/api/v1/reasignaciones/historial/paciente/{pacienteId}": {
+      "get": {
+        "tags": ["Reasignacion"],
+        "summary": "Obtener historial de reasignaciones por paciente",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "pacienteId", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Historial de reasignaciones" }
+        }
+      }
+    },
+    "/api/v1/reasignaciones/{id}/confirmar": {
+      "put": {
+        "tags": ["Reasignacion"],
+        "summary": "Confirmar reasignacion",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Reasignacion confirmada" }
+        }
+      }
+    },
+    "/api/v1/reasignaciones/{id}/cancelar": {
+      "put": {
+        "tags": ["Reasignacion"],
+        "summary": "Cancelar reasignacion",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Reasignacion cancelada" }
+        }
+      }
+    },
+    "/api/v1/dashboard/paciente/{id}": {
+      "get": {
+        "tags": ["Dashboard"],
+        "summary": "Obtener dashboard de paciente",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Dashboard agregado del paciente" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

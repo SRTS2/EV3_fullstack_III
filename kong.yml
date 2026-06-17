@@ -1,0 +1,81 @@
+_format_version: "3.0"
+_transform: true
+
+services:
+  - name: auth-service
+    url: http://ms-auth:8084
+    routes:
+      - name: auth-route
+        paths:
+          - /api/auth
+        strip_path: false
+        methods:
+          - POST
+          - GET
+          - OPTIONS
+    plugins:
+      - name: cors
+        config:
+          origins:
+            - "*"
+          methods:
+            - GET
+            - POST
+            - PUT
+            - PATCH
+            - DELETE
+            - OPTIONS
+          headers:
+            - "*"
+          credentials: true
+
+  - name: bff-service
+    url: http://bff-rednorte:8080
+    routes:
+      - name: bff-route
+        paths:
+          - /api/v1
+        strip_path: false
+        methods:
+          - GET
+          - POST
+          - PUT
+          - PATCH
+          - DELETE
+          - OPTIONS
+    plugins:
+      - name: jwt
+        config:
+          key_claim_name: iss
+          secret_is_base64: false
+          claims_to_verify:
+            - exp
+          anonymous: null
+          run_on_preflight: true
+          uri_param_names:
+            - jwt
+          cookie_names: []
+          header_names:
+            - Authorization
+      - name: cors
+        config:
+          origins:
+            - "*"
+          methods:
+            - GET
+            - POST
+            - PUT
+            - PATCH
+            - DELETE
+            - OPTIONS
+          headers:
+            - "*"
+          credentials: true
+
+consumers:
+  - username: rednorte-client
+    custom_id: client
+    jwt_secrets:
+      - algorithm: HS256
+        key: rednorte-client
+        secret: RedNorteClaveSecretaSuperSegura2024BFF

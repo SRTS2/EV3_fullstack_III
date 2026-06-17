@@ -45,11 +45,6 @@ spring:
   config:
     activate:
       on-profile: docker
-  datasource:
-    url: jdbc:h2:mem:bff;DB_CLOSE_DELAY=-1
-    username: sa
-    password:
-
 ms:
   auth:
     url: ${MS_AUTH_URL:http://ms-auth:8084}

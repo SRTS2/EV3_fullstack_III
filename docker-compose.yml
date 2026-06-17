@@ -1,0 +1,132 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: rednorte-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-rednorte}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-rednorte_pass_2024}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - rednorte-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-rednorte}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  kong:
+    image: kong:3.7
+    container_name: kong
+    environment:
+      KONG_DATABASE: off
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_LISTEN: "0.0.0.0:8001"
+      KONG_PROXY_LISTEN: "0.0.0.0:8000, 0.0.0.0:8443 ssl"
+      KONG_DECLARATIVE_CONFIG: /etc/kong/kong.yml
+    ports:
+      - "8000:8000"
+      - "8443:8443"
+      - "8001:8001"
+    volumes:
+      - ./kong.yml:/etc/kong/kong.yml:ro
+    networks:
+      - rednorte-net
+
+  ms-auth:
+    build: ./ms-auth
+    container_name: ms-auth
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      DB_URL: jdbc:postgresql://postgres:5432/auth_db
+      DB_USER: ${POSTGRES_USER:-rednorte}
+      DB_PASS: ${POSTGRES_PASSWORD:-rednorte_pass_2024}
+      JWT_SECRET: ${JWT_SECRET:-RedNorteClaveSecretaSuperSegura2024BFF}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - rednorte-net
+
+  ms-lista-espera:
+    build: ./ms-lista-espera
+    container_name: ms-lista-espera
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      DB_URL: jdbc:postgresql://postgres:5432/lista_espera
+      DB_USER: ${POSTGRES_USER:-rednorte}
+      DB_PASS: ${POSTGRES_PASSWORD:-rednorte_pass_2024}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - rednorte-net
+
+  ms-reasignacion:
+    build: ./ms-reasignacion
+    container_name: ms-reasignacion
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      DB_URL: jdbc:postgresql://postgres:5432/reasignacion
+      DB_USER: ${POSTGRES_USER:-rednorte}
+      DB_PASS: ${POSTGRES_PASSWORD:-rednorte_pass_2024}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - rednorte-net
+
+  ms-pacientes:
+    build: ./ms-pacientes
+    container_name: ms-pacientes
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      DB_URL: jdbc:postgresql://postgres:5432/pacientes
+      DB_USER: ${POSTGRES_USER:-rednorte}
+      DB_PASS: ${POSTGRES_PASSWORD:-rednorte_pass_2024}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - rednorte-net
+
+  bff-rednorte:
+    build: ./bff-rednorte
+    container_name: bff-rednorte
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      JWT_SECRET: ${JWT_SECRET:-RedNorteClaveSecretaSuperSegura2024BFF}
+      MS_AUTH_URL: http://ms-auth:8084
+      MS_LISTA_ESPERA_URL: http://ms-lista-espera:8081
+      MS_REASIGNACION_URL: http://ms-reasignacion:8082
+      MS_PACIENTES_URL: http://ms-pacientes:8083
+    depends_on:
+      - ms-auth
+      - ms-lista-espera
+      - ms-reasignacion
+      - ms-pacientes
+    networks:
+      - rednorte-net
+
+  frontend-rednorte:
+    build: ./frontend-rednorte
+    container_name: frontend-rednorte
+    ports:
+      - "3000:80"
+    depends_on:
+      - kong
+    networks:
+      - rednorte-net
+
+networks:
+  rednorte-net:
+    driver: bridge
+
+volumes:
+  pgdata:

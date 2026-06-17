@@ -1,6 +1,5 @@
 package com.rednorte.pacientes.controller;
 
-import com.rednorte.pacientes.dto.LoginPacienteDTO;
 import com.rednorte.pacientes.dto.PacienteDTO;
 import com.rednorte.pacientes.service.PacienteService;
 import jakarta.validation.Valid;
@@ -24,12 +23,6 @@ public class PacienteController {
     public ResponseEntity<PacienteDTO> registrar(@Valid @RequestBody PacienteDTO datos) {
         PacienteDTO resultado = pacienteService.registrar(datos, datos.getContrasena());
         return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<PacienteDTO> login(@Valid @RequestBody LoginPacienteDTO loginDTO) {
-        PacienteDTO resultado = pacienteService.autenticar(loginDTO.getRut(), loginDTO.getContrasena());
-        return ResponseEntity.ok(resultado);
     }
 
     @GetMapping
