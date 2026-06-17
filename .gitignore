@@ -12,3 +12,6 @@ dist/
 .env
 .DS_Store
 *.db
+.next/
+out/
+frontend-rednorte/.next/
