@@ -1,0 +1,17 @@
+node_modules/
+target/
+*.class
+*.jar
+*.war
+*.log
+.idea/
+*.iml
+.vscode/
+node_modules/
+dist/
+.env
+.DS_Store
+*.db
+.next/
+out/
+frontend-rednorte/.next/

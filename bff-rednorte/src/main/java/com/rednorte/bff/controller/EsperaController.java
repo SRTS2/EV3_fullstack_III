@@ -2,6 +2,8 @@ package com.rednorte.bff.controller;
 
 import com.rednorte.bff.client.ListaEsperaClient;
 import com.rednorte.bff.dto.ListaEsperaDTO;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,20 +20,44 @@ public class EsperaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ListaEsperaDTO>> getPacientesEnEspera() {
-        List<ListaEsperaDTO> result = listaEsperaClient.getPacientesEnEspera();
-        return ResponseEntity.ok(result);
+    public ResponseEntity<List<ListaEsperaDTO>> listarTodas() {
+        return ResponseEntity.ok(listaEsperaClient.getPacientesEnEspera());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ListaEsperaDTO> obtenerPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(listaEsperaClient.obtenerPorId(id));
     }
 
     @GetMapping("/paciente/{pacienteId}")
-    public ResponseEntity<List<ListaEsperaDTO>> getPacienteEnEspera(@PathVariable Long pacienteId) {
-        List<ListaEsperaDTO> result = listaEsperaClient.getPacienteEnEspera(pacienteId);
-        return ResponseEntity.ok(result);
+    public ResponseEntity<List<ListaEsperaDTO>> obtenerPorPaciente(@PathVariable Long pacienteId) {
+        return ResponseEntity.ok(listaEsperaClient.getPacienteEnEspera(pacienteId));
+    }
+
+    @GetMapping("/especialidad/{especialidad}")
+    public ResponseEntity<List<ListaEsperaDTO>> obtenerPorEspecialidad(@PathVariable String especialidad) {
+        return ResponseEntity.ok(listaEsperaClient.obtenerPorEspecialidad(especialidad));
     }
 
     @PostMapping
-    public ResponseEntity<ListaEsperaDTO> registrarEnEspera(@RequestBody ListaEsperaDTO dto) {
+    public ResponseEntity<ListaEsperaDTO> registrar(@Valid @RequestBody ListaEsperaDTO dto) {
         ListaEsperaDTO result = listaEsperaClient.registrarEnEspera(dto);
-        return ResponseEntity.ok(result);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ListaEsperaDTO> actualizar(@PathVariable Long id, @Valid @RequestBody ListaEsperaDTO dto) {
+        return ResponseEntity.ok(listaEsperaClient.actualizar(id, dto));
+    }
+
+    @PatchMapping("/{id}/estado")
+    public ResponseEntity<ListaEsperaDTO> actualizarEstado(@PathVariable Long id, @RequestParam String estado) {
+        return ResponseEntity.ok(listaEsperaClient.actualizarEstado(id, estado));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+        listaEsperaClient.eliminar(id);
+        return ResponseEntity.noContent().build();
     }
 }
